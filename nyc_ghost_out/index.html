@@ -1,37 +1,189 @@
-<!doctype html><meta charset=utf-8><title>Ghost Neighborhoods of NYC</title>
+<!doctype html>
+<html lang=en>
+<meta charset=utf-8>
+<title>Full Report &middot; NYC Ghost Neighborhoods</title>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<link rel=preconnect href=https://fonts.googleapis.com>
+<link rel=preconnect href=https://fonts.gstatic.com crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel=stylesheet>
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-         max-width: 1024px; margin: 40px auto; padding: 0 20px; line-height: 1.55;
-         color: #0f172a; }
-  h1 { font-size: 34px; margin-bottom: 4px; }
-  h2 { font-size: 22px; margin-top: 36px; margin-bottom: 6px; }
-  .sub { color: #64748b; margin-top: 0; }
-  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 13px; margin: 10px 0 20px; }
-  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px;
-          border-radius: 999px; background: #f1f5f9; }
-  .chip-dot { width: 10px; height: 10px; border-radius: 999px; display: inline-block; }
-  .card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px;
-          margin: 12px 0; box-shadow: 0 1px 2px rgba(15,23,42,0.04); }
-  .card .label { font-size: 12px; color: #64748b; text-transform: uppercase;
-                 letter-spacing: 0.05em; }
-  .card h3 { margin: 4px 0 8px 0; font-size: 17px; }
-  .stats { color: #475569; font-size: 13px; }
-  .grid { display: grid; grid-template-columns: 1fr 260px; gap: 16px; align-items: center; }
+  :root {
+    color-scheme: light;
+    --bg: #0a0a0a;
+    --bg-soft: #141414;
+    --bg-softer: #1a1a1a;
+    --fg: #fafafa;
+    --fg-soft: #a0a0a0;
+    --fg-dim: #666666;
+    --yellow: #f7b500;
+    --yellow-hot: #ffcf3f;
+    --rule: #262626;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); color: var(--fg); }
+  body {
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px; line-height: 1.55;
+    min-height: 100vh;
+    padding: 28px 24px 96px;
+  }
+  .page { max-width: 1100px; margin: 0 auto; }
+  .mono { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+  .masthead {
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--fg-soft);
+    padding-bottom: 14px; border-bottom: 1px solid var(--rule); margin-bottom: 36px;
+  }
+  .masthead a { color: var(--fg); text-decoration: none; }
+  .masthead a:hover { color: var(--yellow); }
+  .masthead .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--yellow); box-shadow: 0 0 0 3px rgba(247, 181, 0, 0.18); flex-shrink: 0; }
+  .masthead .brand { color: var(--fg); font-weight: 700; letter-spacing: 0.24em; }
+  .masthead .spacer { flex: 1; }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--yellow); font-weight: 700; margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 900; font-size: clamp(36px, 5vw, 52px);
+    line-height: 1.0; letter-spacing: -0.025em;
+    color: var(--fg); margin-bottom: 20px;
+  }
+  h2 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 800; font-size: 28px; letter-spacing: -0.02em;
+    color: var(--fg);
+    margin: 56px 0 18px;
+    padding-top: 32px;
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: baseline; gap: 14px;
+  }
+  h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 40px; }
+  h2::before {
+    content: counter(section, decimal-leading-zero);
+    counter-increment: section;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; color: var(--yellow); font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  body { counter-reset: section; }
+  .sub {
+    font-family: 'Archivo', sans-serif;
+    font-size: 17px; line-height: 1.6; color: var(--fg-soft);
+    margin-bottom: 40px; max-width: 760px;
+  }
+  .legend {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    margin: 14px 0 28px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 12px;
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    color: var(--fg-soft); font-weight: 500;
+  }
+  .chip-dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .map-wrap {
+    margin: 24px 0 48px;
+    background: #0b1220;
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    padding: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+  .map-wrap::before {
+    content: 'MAP · 264 ZONES';
+    position: absolute;
+    top: 16px; left: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--fg-dim);
+    z-index: 1;
+  }
+  .map-wrap svg { display: block; margin: 0 auto; }
+  .card {
+    background: var(--bg-soft);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--yellow);
+    border-radius: 0;
+    padding: 18px 22px 20px;
+    margin: 12px 0;
+    box-shadow: none;
+  }
+  .card .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--yellow); font-weight: 700; margin-bottom: 6px;
+  }
+  .card h3 {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700; font-size: 18px; letter-spacing: -0.01em;
+    color: var(--fg); margin: 2px 0 10px;
+  }
+  .stats {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--fg-soft);
+    line-height: 1.7;
+    font-variant-numeric: tabular-nums;
+  }
+  .grid {
+    display: grid; grid-template-columns: 1fr 280px;
+    gap: 24px; align-items: center;
+  }
+  @media (max-width: 680px) {
+    .grid { grid-template-columns: 1fr; }
+  }
   .grid svg { display: block; }
-  .footer { color: #94a3b8; font-size: 12px; margin-top: 40px; }
-  .map-wrap { margin: 16px 0; background: #0b1220; border-radius: 14px;
-              padding: 8px; overflow: hidden; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 6px; }
-  th, td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #f1f5f9; }
-  th { color: #64748b; font-weight: 500; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; margin-top: 10px;
+  }
+  th, td {
+    text-align: left; padding: 7px 12px;
+    border-bottom: 1px solid var(--rule);
+  }
+  th {
+    color: var(--fg-dim); font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 10px;
+    border-bottom: 1px solid var(--fg-dim);
+  }
+  td {
+    color: var(--fg-soft); font-variant-numeric: tabular-nums;
+  }
+  tr:hover td { background: var(--bg-softer); color: var(--fg); }
+  .footer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--fg-dim);
+    margin-top: 72px; padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    letter-spacing: 0.04em; line-height: 1.8;
+  }
+  .footer a { color: var(--yellow); }
+  .footer code { font-family: 'JetBrains Mono', monospace; color: var(--fg-soft); background: var(--bg-soft); padding: 1px 5px; border-radius: 2px; font-size: 10.5px; }
+  code { font-family: 'JetBrains Mono', monospace; color: var(--fg-soft); background: var(--bg-soft); padding: 1px 5px; border-radius: 2px; font-size: 0.92em; }
+  a { color: var(--yellow); text-decoration: none; }
+  a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 </style>
-
+<div class=page>
+<div class=masthead>
+  <div class=dot></div>
+  <span class=brand>NYC GHOST NEIGHBORHOODS</span>
+  <span>FULL REPORT &middot; 264 ZONES</span>
+  <div class=spacer></div>
+  <a href="../">&larr; Home</a>
+</div>
+<div class=eyebrow>// 2011-01 &rarr; 2024-12 &middot; yellow + green + FHV + HVFHS</div>
 <h1>Ghost Neighborhoods of NYC</h1>
-<p class=sub>2.76B for-hire trips across 168 months and
-264 taxi zones — a data-first X-ray of which parts of NYC quietly stopped
-getting picked up. Computed across 371 monthly trip-records files from the NYC TLC
-by a 371-way parallel Burla map in 14.5s.</p>
+<p class=sub>2.76B for-hire trips across 168 months and 264 taxi zones — a data-first X-ray of which parts of NYC quietly stopped getting picked up. Computed across 371 monthly trip-records files from the NYC TLC by a 371-way parallel Burla map in 14.5s.</p>
 
 <div class=legend><span class=chip><span class=chip-dot style="background:#b91c1c"></span>ghost (2)</span><span class=chip><span class=chip-dot style="background:#f59e0b"></span>cooling (56)</span><span class=chip><span class=chip-dot style="background:#e2e8f0"></span>stable (12)</span><span class=chip><span class=chip-dot style="background:#22c55e"></span>warming (57)</span><span class=chip><span class=chip-dot style="background:#2563eb"></span>emergent (135)</span></div>
 <div class=map-wrap><svg xmlns="http://www.w3.org/2000/svg" viewBox="911175.1 -274844.3 158207.4 156722.4" preserveAspectRatio="xMidYMid meet" width="100%" style="max-width:960px;background:#0b1220"><path d="M933100.9,-192536.1 L933091.0,-192572.2 L933088.6,-192605.0 L933121.6,-192857.4 L933149.3,-192978.6 L933222.3,-193293.3 L933252.6,-193450.6 L933297.7,-193555.4 L933330.6,-193748.8 L933350.6,-193794.7 L933355.7,-193834.0 L933365.8,-193886.5 L933431.7,-194391.3 L933465.0,-194801.1 L933463.4,-195227.4 L933471.1,-195315.9 L933483.8,-195397.8 L933511.4,-195509.3 L933554.1,-195620.7 L933609.2,-195718.9 L933669.2,-195797.5 L933731.8,-195866.2 L933779.3,-195908.7 L933841.8,-195957.8 L933906.7,-195997.0 L933976.7,-196036.2 L934119.0,-196101.5 L934491.3,-196304.0 L934656.1,-196375.8 L934810.9,-196441.1 L934963.3,-196503.1 L935150.6,-196574.8 L935178.1,-196591.2 L935205.6,-196610.8 L935273.1,-196692.6 L935335.7,-196794.1 L935373.3,-196866.2 L935430.8,-196944.8 L935455.8,-196974.3 L935483.3,-197000.4 L935548.3,-197042.9 L935625.7,-197075.6 L935688.1,-197091.8 L935798.0,-197121.1 L935960.2,-197147.0 L936040.1,-197169.8 L936154.9,-197176.2 L936354.5,-197195.4 L936594.2,-197234.3 L936664.1,-197250.6 L936746.4,-197253.7 L936783.8,-197250.3 L937133.2,-197256.2 L937427.6,-197242.5 L938001.4,-197211.9 L938662.6,-197187.7 L938777.4,-197180.9 L939241.5,-197160.4 L939663.1,-197130.1 L939730.5,-197116.9 L939797.8,-197103.6 L939872.6,-197074.0 L940059.6,-196991.7 L940154.3,-196948.9 L940189.3,-196935.7 L940368.8,-196850.1 L941388.5,-196402.4 L941525.6,-196326.7 L941548.1,-196303.7 L941585.5,-196284.0 L941617.9,-196313.4 L941765.1,-196254.1 L941780.1,-196280.3 L941810.0,-196267.2 L941664.7,-195936.3 L941589.5,-195742.9 L941233.7,-194910.7 L941148.5,-194740.3 L941063.4,-194586.4 L940993.3,-194438.9 L940895.6,-194255.5 L940590.1,-193649.4 L940565.0,-193593.7 L940552.5,-193547.9 L940542.4,-193498.7 L940354.6,-193144.9 L940016.5,-192483.2 L939996.4,-192437.3 L939841.2,-192198.2 L939720.9,-191877.1 L939149.8,-190809.2 L939102.2,-190714.2 L939072.2,-190658.5 L939067.2,-190658.5 L939059.7,-190658.5 L939027.3,-190665.2 L939019.8,-190678.3 L938984.9,-190698.0 L938959.9,-190701.3 L938932.5,-190704.7 L938900.1,-190708.0 L938822.7,-190721.3 L938740.4,-190734.5 L938720.4,-190734.6 L938705.4,-190724.8 L938668.0,-190718.3 L938628.0,-190698.7 L938583.0,-190662.7 L938548.0,-190616.9 L938515.4,-190554.6 L938492.8,-190482.5 L938412.6,-190308.9 L938372.6,-190253.2 L938357.5,-190207.4 L938322.4,-190132.0 L938277.2,-189987.8 L938247.2,-189932.1 L938259.4,-189823.9 L938261.9,-189791.1 L938266.6,-189669.8 L938261.6,-189627.2 L938241.4,-189555.1 L938198.8,-189450.2 L938101.1,-189256.9 L938071.1,-189207.8 L938005.9,-189063.7 L937945.8,-188968.7 L937825.5,-188719.7 L937707.8,-188500.2 L937680.2,-188444.6 L937642.6,-188375.8 L937610.1,-188329.9 L937592.5,-188284.1 L937519.9,-188156.3 L937414.6,-187936.8 L937332.0,-187792.7 L937294.4,-187714.1 L937244.3,-187632.2 L937149.1,-187435.7 L937111.5,-187383.3 L937083.9,-187307.9 L936983.7,-187121.2 L936956.1,-187062.2 L936911.0,-186937.7 L936838.3,-186806.7 L936695.4,-186508.6 L936675.4,-186475.8 L936650.3,-186430.0 L936560.2,-186272.8 L936540.1,-186240.0 L936309.6,-185814.2 L936222.0,-185679.9 L936199.4,-185637.4 L936181.9,-185614.4 L936099.3,-185506.4 L935919.0,-185221.5 L935881.5,-185178.9 L935748.8,-184998.9 L935706.3,-184943.2 L935598.6,-184792.6 L935415.8,-184533.9 L935343.2,-184432.4 L935313.2,-184380.0 L935253.1,-184298.2 L935210.5,-184219.6 L935157.9,-184131.1 L935125.3,-184075.5 L935055.2,-183993.6 L934997.7,-183944.5 L934932.7,-183905.3 L934865.2,-183866.1 L934697.8,-183804.2 L934627.9,-183791.2 L934560.5,-183788.0 L934503.1,-183794.7 L934375.9,-183847.4 L934323.5,-183867.2 L934288.6,-183887.0 L934233.7,-183900.2 L933946.9,-184048.4 L933724.9,-184166.9 L933251.0,-184394.1 L933106.4,-184489.5 L933046.6,-184532.2 L932954.4,-184621.0 L932922.0,-184653.8 L932894.7,-184689.9 L932800.1,-184854.1 L932670.9,-185129.8 L932462.1,-185540.1 L932288.1,-185888.1 L932193.6,-186088.3 L932116.5,-186206.5 L932049.3,-186318.1 L931959.9,-186521.6 L931890.3,-186659.5 L931813.3,-186833.4 L931728.8,-186987.7 L931691.6,-187109.1 L931634.7,-187365.0 L931615.0,-187489.6 L931612.6,-187512.6 L931597.7,-187555.3 L931575.4,-187637.3 L931560.6,-187732.4 L931553.5,-187896.4 L931553.8,-188034.1 L931561.5,-188152.1 L931556.7,-188234.1 L931567.0,-188358.7 L931572.1,-188427.5 L931589.9,-188561.9 L931615.4,-188830.7 L931620.6,-188909.4 L931658.9,-189299.5 L931679.5,-189588.0 L931689.7,-189699.5 L931702.4,-189804.4 L931725.1,-189892.9 L931725.1,-189929.0 L931720.2,-189968.3 L931722.8,-190024.1 L931738.0,-190086.3 L931773.2,-190217.4 L931838.4,-190371.4 L931918.6,-190515.5 L932171.3,-190787.1 L932326.3,-190934.3 L932566.4,-191150.2 L932693.9,-191245.0 L932771.4,-191317.0 L933100.9,-192536.1 Z" fill="#e2e8f0" stroke="#0f172a" stroke-width="20" stroke-opacity="0.3" data-zone-id="1"><title>Newark Airport (EWR) — stable</title></path>
@@ -918,7 +1070,5 @@ single line, one point per month, every taxi + every rideshare pickup.</p>
       </div>
     </div>
 
-<div class=footer>Generated 2026-04-19T01:00:41+00:00. Source: NYC TLC monthly trip-record parquets
-(yellow 2011-2024, green 2014-2024, high-volume FHV 2019.02-2024), served via the
-Hugging Face mirror <code>DinoPonjevic/NYC_TaxiData_RAW</code>. Pipeline: Burla
-<code>remote_parallel_map</code> over every monthly file, merged on the driver.</div>
+<div class=footer>Generated 2026-04-19T01:00:41+00:00 &middot; Source: NYC TLC monthly trip-record parquets (yellow 2011-2024, green 2014-2024, high-volume FHV 2019.02-2024), served via the Hugging Face mirror <code>DinoPonjevic/NYC_TaxiData_RAW</code>. Pipeline: Burla <code>remote_parallel_map</code> over every monthly file, merged on the driver.<br><a href="../">&larr; Back to home</a></div>
+</div>
